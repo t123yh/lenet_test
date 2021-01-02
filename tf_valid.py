@@ -9,22 +9,22 @@ mat_tf = mat[np.newaxis,:,:,np.newaxis]
 kernel = np.array([[0,1,2],[3,4,5],[6,7,8]],dtype=np.int32)
 kernel_tf = np.einsum('qkij->ijqk', kernel[np.newaxis,np.newaxis,:,:])
 
-conv2 = tf.nn.conv2d(mat_tf, kernel_tf, strides=[1, 1, 1, 1], padding='SAME') 
+conv2 = tf.nn.conv2d(mat_tf, kernel_tf, strides=[1, 1, 1, 1], padding='VALID')
 
 def convolve_same(dat, w):
     def get_dat(x, y):
         if 0 <= x < dat.shape[0] and 0 <= y < dat.shape[1]:
             return dat[x][y]
         return 0
-    result = np.zeros(dat.shape)
-    for x in range(dat.shape[0]):
-        for y in range(dat.shape[1]):
+    result = np.zeros([dat.shape[0] - w.shape[0] + 1, dat.shape[1] - w.shape[1] + 1])
+    for x in range(dat.shape[0] - w.shape[0] + 1):
+        for y in range(dat.shape[1] - w.shape[1] + 1):
             ans = 0
             offset_i = w.shape[0] // 2
             offset_j = w.shape[1] // 2
             for i in range(w.shape[0]):
                 for j in range(w.shape[1]):
-                    n1 = get_dat(x + i - offset_i, y + j - offset_j)
+                    n1 = get_dat(x + i + offset_i - 1, y + j + offset_j - 1)
                     n2 = w[i][j]
                     ans += n1 * n2
             result[x][y] = ans
