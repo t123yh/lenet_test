@@ -7,7 +7,7 @@ from tensorflow.python.layers.core import flatten
 
 tf.executing_eagerly()
 
-conv1_weights_tf = np.load('params/conv1_Wfuck.npy')
+conv1_weights_tf = np.load('params/conv1_W.npy')
 conv1_biases = np.load('params/conv1_b.npy')
 
 conv2_weights_tf = np.load('params/conv2_W.npy')

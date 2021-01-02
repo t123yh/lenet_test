@@ -5,8 +5,8 @@ import io
 import os
 
 
-conv1_weights_tf = np.load('params/conv1_Wfuck.npy')
-conv1_weights = np.einsum('ijqk->qkji', conv1_weights_tf)
+conv1_weights_tf = np.load('params/conv1_W.npy')
+conv1_weights = np.einsum('ijqk->qkij', conv1_weights_tf)
 conv1_biases = np.load('params/conv1_b.npy')
 
 conv2_weights_tf = np.load('params/conv2_W.npy')
@@ -37,10 +37,14 @@ def convolve_same(dat, w):
             for i in range(w.shape[0]):
                 for j in range(w.shape[1]):
                     n1 = get_dat(x + i - offset_i, y + j - offset_j)
-                    n2 = w[j][i]
+                    n2 = w[i][j]
                     ans += n1 * n2
             result[x][y] = ans
     return result
+
+
+def convolve_valid(dat, w):
+
 
 
 def test_file(name):
